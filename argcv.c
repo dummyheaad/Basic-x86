@@ -23,7 +23,8 @@ int main(int argc, char* argv[])
     // oleh karena itu program perlu sedikit dimodifikasi
     int total_arg = argc - 1;
     printf("Terdapat %d buah argument yang diberikan, yaitu:\n", total_arg);
-    // loop dimulai dari 1 karena argv[0] berisi nama program yaitu ./argcv
+    // loop dimulai dari 1 karena argv[0] berisi nama program yaitu ./argcv sehingga nilai ini akan dilewati saja.
+    // Namun,end of loop nya tetap memakai nilai dari argc
     for (int i = 1;i < argc;i ++)
         printf("<\t%s\n",argv[i]);
     return 0;
