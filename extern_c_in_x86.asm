@@ -42,3 +42,5 @@ main:
 ; kita harus mempush result di akhir
 ; Hal ini akan mengakibatkan result berada pada top of the stack sehingga result akan dibaca pertama kali oleh fungsi printf
 ; Begitupun dengan sisa parameter yang diperlukan oleh printf
+
+; Compile file object di gcc pakai opsi -no-pie ama -m32
