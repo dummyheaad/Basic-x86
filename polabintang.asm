@@ -12,6 +12,7 @@
 ; **********
 
 
+
 global _start
 
 section .text
@@ -21,11 +22,11 @@ inisialisasi:                   ; fungsi untuk inisialisasi
     mov esi, 1                  ; menyatakan posisi baris sekarang
     mov edi, 1                  ; menyatakan posisi bintang sekarang
 
-loop:                           ; fungsi looping pencetakan bintang
+looping:                        ; fungsi looping pencetakan bintang
     call cetak_bintang          ; cetak satu bintang
     inc edi                     ; update posisi bintang
     cmp edi, esi                ; bandingkan dengan posisi barais
-    jle loop                    ; jika masih <= maka lanjutkan looping
+    jle looping                 ; jika masih <= maka lanjutkan looping
 
     call cetak_newline          ; jika > maka cetak newline
 
@@ -34,7 +35,7 @@ loop:                           ; fungsi looping pencetakan bintang
     je end                      ; jika iya, akhiri program
 
     mov edi, 1                  ; jika tidak, ulang proses mencetak
-    jmp loop                    ; kembali lagi ke fungsi pencetakan
+    jmp looping                 ; kembali lagi ke fungsi pencetakan
     
 cetak_bintang:                  ; fungsi untuk mencetak satu bintang
     mov eax, 4                  ; berikan syscall write
