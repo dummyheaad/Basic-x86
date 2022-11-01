@@ -1,0 +1,16 @@
+Cara cepat compile x86 via nasm & ld buat bikin executable
+
+Cukup append fungsi berikut ke ~/.bashrc
+
+compile_x86 () {
+  a=$(echo "$1" | sed 's/\b.asm\b/.o/g');
+  nasm -f elf32 $1 | -o $a;
+  b=$(echo "$a" | sed 's/\b.o\b//g');
+  ld -m elf_i386 $a -o $b;
+}
+
+Kemudian panggil perintah: source ~/.bashrc
+
+Selesai...
+
+Cara pakai tinggal compile_x86 nama.asm
