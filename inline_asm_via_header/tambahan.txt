@@ -1,0 +1,3 @@
+penjelasan bagian mov eax, [ebp+8] :
+https://en.wikibooks.org/wiki/X86_Disassembly/Functions_and_Stack_Frames
+
