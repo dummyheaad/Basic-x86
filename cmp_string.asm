@@ -10,7 +10,7 @@ segment .data
     len_str2 equ $ - str2                   ; panjang string kedua
     res db "Comparison 3 first character between %s and %s = %d", 0x0a, 0x00
     len_res equ $ - res
-    tc dd 2                                ; jumlah karakter yang akan dibandingkan
+    tc dd 3                                ; jumlah karakter yang akan dibandingkan
     len_tc equ $ - tc
 
 segment .text
