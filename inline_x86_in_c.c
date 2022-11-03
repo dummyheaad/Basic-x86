@@ -16,6 +16,15 @@
                     : list of clobbered registers (modified by inline assembler) [opt]
     );
     * [opt] = optional
+   
+    __asm__("assembly code (intel/at&t)" : %0, %1, .. %k : %k+1, %k+2 .., %p : %p+1, %p+2, ... , %n);
+
+    * %x berarti bahwa nilai pada assembly code akan diganti dengan argumennya. Argumen dimulai dari 0 atau %0.
+      Contoh:
+      __asm__("mov eax, $1" : "=a" (hasil) : "g" (angka));
+      maka $1 = angka
+      sehingga assembly code nya menjadi mov eax, ebx
+      selain itu, nilai angka akan disimpan di sembarang general purpose register
 */
 
 int main()
