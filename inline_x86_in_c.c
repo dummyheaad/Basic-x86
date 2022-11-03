@@ -22,7 +22,7 @@ int main()
 {
     int bil1, bil2, tambah, kurang, kali, bagi, sisa_bagi;
 
-    printf("Basic Arthmetic using Inline x86 in C [Intel Syntax]\n");
+    printf("Basic Arithmetic using Inline x86 in C [Intel Syntax]\n");
     
     int cek = scanf("%d%d",&bil1, &bil2);												// simpan retval scanf (soalnya kalau cuma pakai scanf pas di-compile ada warning)
     if (!cek)
