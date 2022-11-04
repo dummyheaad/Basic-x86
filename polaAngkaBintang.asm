@@ -14,7 +14,7 @@
 global _start
 
 section .bss                                ; berisi data yang belum diinisialisasi dengan suatu nilai (baru alokasi memori saja)
-    outBuff resb 4                          ; buat variabel outBuff kemudian berikan uninitialized memory resb (reserve byte) sebanyak 1 byte
+    outBuff resb 1                          ; buat variabel outBuff kemudian berikan uninitialized memory resb (reserve byte) sebanyak 1 byte
                                             ; variabel ini digunakan untuk menyimpan nilai ascii dari suatu karakter.
                                             ; Kemudian alamat dari outBuff akan diakses oleh register sehingga nilai dari outBuff bisa dicetak
                                             ; Ini adalah bagian paling penting pada saat mencetak integer ke layar (disini contoh sederhanaya 0-9)
@@ -77,10 +77,9 @@ cetak_newline:
     ret
 
 cetak_angka:
-    mov ecx, 0x30
-    add ecx, esi
-    mov [outBuff], ecx
-    mov ecx, outBuff
+    mov [outBuff], byte 0x30        ; move nilai 0x30 ke variabel outBuff (jangan lupa spesifikasi size nya)
+    add [outBuff], esi              ; tambah nilai variabel outBuff dengan nilai yang disimpan di register esi. Spesifikasi byte tidak diperlukan karena operasi nya melibatkan register, bukan immediate value maupun variabel di section .data / section .bss
+    lea ecx, outBuff                ; load memori outBuff agar bisa kontennya bisa dicetak
     mov eax, 4
     mov ebx, 1
     mov edx, 1
