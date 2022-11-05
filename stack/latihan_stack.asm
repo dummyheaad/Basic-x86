@@ -44,21 +44,25 @@ tambahkurang:
 
     ; Push immediate value / konstanta bisa dilakukan secara langsung
 
-    mov ebx, [ebp+12]           ; ebx = [esi]
-    add ebx, [ebp+8]            ; ebx += [edi]
-    sub ebx, [ebp-4]            ; ebx -= var1
-    sub ebx, [ebp-8]            ; ebx -= var2
-    sub ebx, [ebp-12]           ; ebx -= var3
+    mov ebx, [ebp+(4*3)]            ; ebx = [esi]
+    add ebx, [ebp+(4*2)]            ; ebx += [edi]
+    sub ebx, [ebp-(4*1)]            ; ebx -= var1
+    sub ebx, [ebp-(4*2)]            ; ebx -= var2
+    sub ebx, [ebp-(4*3)]            ; ebx -= var3
 
     mov esp, ebp                ; Epilogue
     pop ebp                     ; Kembalikan nilai awal ebp, yaitu 3
     ret
 
 ;           x86_stack
-; ebp+12      [esi]
-; ebp+8       [edi]
-; ebp+4       ret_addr
-; ebp         [ebp]
-; ebp-4       var1
-; ebp-8       var2
-; ebp-12      var3        <-- esp
+; ebp+12    (4*3)       [esi]
+; ebp+8     (4*2)       [edi]
+; ebp+4     (4*1)       ret_addr
+; ebp                   [ebp]
+; ebp-4     (4*1)       var1
+; ebp-8     (4*2)       var2
+; ebp-12    (4*3)       var3        <-- esp
+
+
+; [ebp-4*x]       => elemen stack di-push lebih dulu dibanding ebp
+; [ebp+4*x]       => elemen stack di-push setelah ebp
