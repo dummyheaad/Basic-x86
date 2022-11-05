@@ -39,11 +39,11 @@ tambahkurang:
     mov esi, [var2]             ; Var lokal 2
     push esi                    ; Var lokal 2 di-push
 
-    ; Push variabel (initialized) harus melalui register terlebih dahulu
+    ; Push variabel (initialized) harus melalui register terlebih dahulu. Dikarenakan yang di-push adalah nilai dari variabel nya maka gunakan []
 
     push var3                   ; Var lokal 3
 
-    ; Push immediate value / konstanta bisa dilakukan secara langsung
+    ; Push immediate value / konstanta bisa dilakukan secara langsung dan tidak menggunakan []
 
     mov ebx, [ebp+(4*3)]            ; ebx = [esi]
     add ebx, [ebp+(4*2)]            ; ebx += [edi]
