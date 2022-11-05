@@ -64,5 +64,8 @@ tambahkurang:
 ; ebp-12    (4*3)       var3        <-- esp
 
 
-; [ebp-4*x]       => elemen stack di-push lebih dulu dibanding ebp
-; [ebp+4*x]       => elemen stack di-push setelah ebp
+; [ebp+4]         => return address (kalau pakai prolog)
+; [ebp-4*x]       => elemen stack di-push setelah ebp
+;                 => digunakan untuk mengakses variabel lokal pada fungsi
+; [ebp+4*x]       => elemen stack di-push lebih dahulu dibanding ebp
+;                 => digunakan untuk mengakses parameter fungsi (x != 1)
