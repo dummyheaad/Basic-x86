@@ -32,6 +32,7 @@ _start:
 tambahkurang:
     push ebp                    ; Prologue
     mov ebp, esp
+    ;sub esp, 12                ; Perintah ini dipakai jika kita menggunakan perintah mov ketimbang push pada stack
 
     mov esi, [var1]             ; Var lokal 1
     push esi                    ; Var lokal 1 di-push
