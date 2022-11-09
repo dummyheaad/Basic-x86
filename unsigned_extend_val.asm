@@ -17,7 +17,7 @@ section .data
 
 section .text
 _start:
-    ; var8 disimpan di register 18 bit
+    ; var8 disimpan di register 16 bit
     ; misal dipakai register ax
     mov al, [var8]
     sub ah, ah
