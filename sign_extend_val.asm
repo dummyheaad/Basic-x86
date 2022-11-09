@@ -36,6 +36,16 @@
 ; bin(-5)[16]   = 1111111111111101
 ; hex(-5)[16]   = 1111 1111 1111 1101 = 0xFFFB
 
+; Cara konversi 2's complement ke bilangan x
+; misal: 2's complement 6 = 1010 = -6
+; maka untuk menjadikannya ke angka 6 cukup lakukan langkah yang sama pada saat mengkonversi nya ke 2's complement
+; - mulai dari lsb, bergerak ke kiri. Temukan angka 1 pertama kemudian lakukan flip bit ke sisa bit di kiri angka 1
+; sehingga diperoleh: 1010 => 0110 = 6
+
+
+; https://stackoverflow.com/questions/52678281/twos-complement-quick-way
+
+
 global _start
 
 section .bss
