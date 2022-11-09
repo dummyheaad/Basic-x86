@@ -43,18 +43,23 @@ _start:
     ; Diperoleh hasil akhir pada register ax yang sudah dikonversi menjadi big endian
     ; ax = 0x644b = 25675
 
+    ; Dikarenakan interrupt memerlukan syscall yang diambil dari register eax maka kita harus menyimpan terlebih dahulu data eax agar tidak ditimpa oleh nilai syscall write maupun exit (4 atau 1)
     mov esi, eax
 
     call format_1
+    ; pada kondisi ini, eax = 4 maka kita harus restore nilai eax terlebih ahulu
+
     mov eax, esi
     call print_ah
     call newline
 
     call format_2
+    ; pada kondisi ini, eax = 4 maka kita harus restore nilai eax
+
     mov eax, esi
     call print_al
-    
     call newline
+
     call end
 
 print_ah:
