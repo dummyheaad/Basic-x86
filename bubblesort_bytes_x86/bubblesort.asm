@@ -110,16 +110,18 @@ swap:
     xchg al, [myArray+edi]
     mov [myArray+esi], al
 
-    ; Karena kita tidak bisa kembali ke fungsi pemanggil (soalnya pakai jump condition maka salah satu cara nya adalah dengan menulis kembali sisa kode pada fungsi yang akan dieksekusi setelah return
-    inc edi
-    cmp edi, 7
-    jl sort
+    ret
 
-    inc esi
-    cmp esi, 7
-    jl bubblesort
+    ; Kode di bawah tidak diperlukan lagi
+;    inc edi
+;    cmp edi, 7
+;    jl sort
 
-    jmp end2
+;    inc esi
+;    cmp esi, 7
+;    jl bubblesort
+
+;    jmp end2
 
 end:
     mov eax, 1
