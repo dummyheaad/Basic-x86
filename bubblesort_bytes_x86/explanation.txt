@@ -1,0 +1,25 @@
+
+
+
+.STACK
+ret_addr_bubblesort
+ret_addr_sort			
+ret_addr_check			<-- esp
+
+Saat jmp swap, esp masih tetap menunjuk ke ret_addr_check karena jmp tidak mempush return address dari fungsi swap.
+Sehingga saat diberikan perintah ret di akhir fungsi swap, fungsi tidak kembali ke fungsi check melainkan kembali
+ke fungsi sort, yaitu satu instruksi setelah "call check".
+
+Sehingga kita tidak perlu menuliskan ulang kode:
+inc edi
+cmp edi, 7
+jl sort
+
+inc esi
+cmp esi, 7
+jl bubblesort
+
+jmp end
+
+Miskonsepsi: saat diberikan perintah ret pada fungsi swap, fungsi akan kembali ke satu instruksi di bawah perintah "jl swap".
+Padahal jump sendiri seharusnya tidak mempush return address dari fungsi yang dipanggil sehingga esp tetap akan menunjuk ke return address fungsi check.
