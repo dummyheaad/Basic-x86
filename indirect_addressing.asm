@@ -13,7 +13,7 @@ _start:
                     ; ecx sekarang mengandung address dari myvar
                     ; register ecx digunakan agar address tidak terpotong karena ukuran register yang tidak memenuhi
     mov ebx, [ecx]  ; Indirect Addressing.
-                    ; move value yang disimpang oleh address yang ditunjuk oleh ecx ke ebx, yaitu nilai dari myvar ke ebx
+                    ; move value yang disimpan oleh address yang ditunjuk oleh ecx ke ebx, yaitu nilai dari myvar ke ebx
                     ; ebx sekarang mengandung nilai dari myvar, yaitu 250
                     ; analogi nya mirip seperti dereferencing pada c menggunakan *
                     ; mov ebx, [ecx] -> ebx = *ecx = 250
