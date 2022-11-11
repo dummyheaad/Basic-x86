@@ -18,6 +18,8 @@
 ; * r/m8 berarti register / memory dengan ukuran 8bit
 ; * imm  berarti immediate value (konstanta)
 
+; PENTING!!: Untuk pemakaian div pada looping, jangan lupa untuk men-set edx dengan nilai 0 pada setiap iterasi
+
 global _start
 
 section .bss
