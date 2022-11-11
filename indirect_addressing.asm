@@ -15,7 +15,7 @@ _start:
     mov ebx, [ecx]  ; Indirect Addressing.
                     ; move value yang disimpan oleh address yang ditunjuk oleh ecx ke ebx, yaitu nilai dari myvar ke ebx
                     ; ebx sekarang mengandung nilai dari myvar, yaitu 250
-                    ; analogi nya mirip seperti dereferencing pada c menggunakan *
+                    ; analogi nya mirip seperti dereferencing pada c menggunakan *. Disini register ecx dapat dianggap sebagai sebuah variabel pointer
                     ; mov ebx, [ecx] -> ebx = *ecx = 250
     mov eax, 1      ; syscall exit
     int 0x80        ; panggil kernel untuk menjalankan syscall
