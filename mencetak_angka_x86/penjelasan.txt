@@ -1,0 +1,85 @@
+Recall Concept
+==============
+Stack di x86
+Stack --> Tumbuh dari address tinggi menuju address rendah
+Navigasi pada stack di x86 menggunakan ESP (Extended Stack Pointer)
+Ukuran satu stack frame di x86 adalah 4 bytes
+Proses navigasi pada stack		: Ke Bawah X Frame:	ESP - 4.x byte
+					: Ke Atas X Frame:	ESP + 4.x byte
+
+
+.BSS
+tmp	(uninitialized)		-> tmp 		
+mynum	(uninitialized)		-> mynum 	= 0x3039 (12345)
+
+.DATA
+counter		0x01
+newline		0x0a
+len = 5 (constant)
+
+(pada pemanggilan ambil_digit)
+.STACK
+ret_addr_func				
+ebp = 27				<-- esp (4)
+ret_addr_ambil_digit			<-- esp (3)	
+ebp = addr_27_pada_stack		<-- esp (2)
+0x30 + 5				
+0x30 + 4
+0x30 + 3
+0x30 + 2
+0x30 + 1				<-- esp (1)
+
+(kondisi akhir pada pemanggilan cetak_digit) [iterasi-1]
+.STACK
+ret_addr_func				
+ebp = 27				
+ret_addr_cetak_digit			
+ebp = addr_27_pada_stack		
+0x30 + 5				
+0x30 + 4
+0x30 + 3
+0x30 + 2				<-- esp
+ret_addr_print	
+
+(pada pemanggilan cetak_digit) [iterasi-2]
+.STACK
+ret_addr_func				
+ebp = 27				
+ret_addr_cetak_digit			
+ebp = addr_27_pada_stack		
+0x30 + 5				
+0x30 + 4
+0x30 + 3				<-- esp				
+ret_addr_print				
+ret_addr_print	
+
+dst..
+
+(setelah cetak_digit di-return)
+.STACK
+ret_addr_func
+ebp = 27				<-- esp
+ret_addr_cetak_digit
+ebp = addr_27_pada_stack
+
+(saat pemanggilan cetak_newline)
+.STACK
+ret_addr_func
+ebp = 27
+ret_addr_cetak_newline			<-- esp
+ebp = addr_27_pada_stack
+
+(setelah pemanggilan cetak_newline)
+.STACK
+ret_addr_func
+ebp = 27				<-- esp
+ret_addr_cetak_newline			
+ebp = addr_27_pada_stack
+
+(keluar dari fungsi func ke _start)
+.STACK
+~					<-- esp (3) restore stack
+ret_addr_func				<-- esp (2)
+ebp = 27				<-- esp (1)
+ret_addr_cetak_newline
+ebp = addr_27_pada_stack
