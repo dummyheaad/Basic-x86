@@ -175,7 +175,7 @@ print:
     ret
 
 cetak_newline:
-    mov eax, 1
+    mov eax, 4
     mov ebx, 0
     mov ecx, newline
     mov edx, 1
