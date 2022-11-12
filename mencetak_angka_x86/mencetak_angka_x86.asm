@@ -176,7 +176,7 @@ print:
 
 cetak_newline:
     mov eax, 4
-    mov ebx, 0
+    mov ebx, 1
     mov ecx, newline
     mov edx, 1
     int 0x80
