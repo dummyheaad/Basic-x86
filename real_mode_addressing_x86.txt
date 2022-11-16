@@ -13,6 +13,7 @@ offset		 -> 16 bit (4 digit hex)
 
 total kemungkinan segment:offset untuk satu buah linear address = 2^12 = 4096 buah kemungkinan
 
+perhitungan -> 2^32 / 2^20 = 2^12
 
 cara konversi segment:offset ke linear address (physical address):
 - cari segment address, yaitu dengan melakukan hex left shift (shift 1 digit hex ke kiri) terhadap segment selector
