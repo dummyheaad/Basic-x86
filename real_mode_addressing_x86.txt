@@ -1,0 +1,120 @@
+Real Mode Addressing x86
+========================
+
+linear address (physical address) 		-> 20 bit (5 digit hex)
+
+linear address (physical address)		-> segment:offset (4 digit hex)
+
+segment:offset disebut juga dengan virtual address / logical address / segmented address
+
+segment selector -> 16 bit (4 digit hex) (MSB dari linear address)
+segment adddress -> 20 bit (4 digit hex) -> segment selector di-left-shift sebanyak 1 kali
+offset		 -> 16 bit (4 digit hex)
+
+total kemungkinan segment:offset untuk satu buah linear address = 2^12 = 4096 buah kemungkinan
+
+
+cara konversi segment:offset ke linear address (physical address):
+- cari segment address, yaitu dengan melakukan hex left shift (shift 1 digit hex ke kiri) terhadap segment selector
+  contoh: segment selector: 0x34A9 maka segment address: 0x34A90
+ 
+- tambahkan segment address dengan nilai offset (16-bit)
+
+- diperoleh nilai linear address
+
+contoh (1):
+logical address -> F3CB:1128
+
+segment selector: F3CB
+segment address: F3CB0
+offset: 1128
+
+linear address = F3CB0 + 1128
+linear address = 0xf4dd8
+
+
+cara konversi linear address (physical address) menjadi segment:offset:
+- Dikarenakan linear address bisa dipetakan ke 2^12 buah segment:offset maka ambil saja salah satu nilai untuk
+  segment selector ataupun offset. Tapi perlu diingat bahwa segment address harus 20 bit
+  dan segment offset harus 16 bit. Jika perhitungan menghasilkan nilai selain rentang yang diizinkan maka
+  kita harus memilih nilai yang lain lagi.
+  
+- Kemudian hitung komponen sisa nya, misal apabila dipilih segment selector maka hitung offsetnya
+  Jika yang dipilih offset maka hitung segment selector nya
+  
+- Diperoleh nilai segment:offset. Ini hanyalah salah satu dari 2^12 buah kemungkinan pemetaan linear address
+
+contoh (2):
+linear address: 0x7523A
+
+misal diambil segment selector: 0x334A
+maka diperoleh segment address: 0x334A0
+
+sehingga nilai offset = 0x7523A - 0x334A0
+offset = 0x41d9a (20 bit) maka nilai ini tidak bisa diambil
+
+misal diambil segment selector: 0x73AB
+maka diperoleh segment address: 0x73AB0
+
+sehingga nilai offset = 0x7523A - 0x73AB0
+offset = 0x178a (16 bit) maka nilai ini bisa diambil
+
+Sehingga linear address 0x7523A bisa dipetakan menjadi segmented address / logical address 334A:178A
+
+
+
+
+
+
+
+Batasan nilai segment selector agar diperoleh address yang valid
+================================================================
+
+			Rumus: segment_selector >= ((linear_address - 0xFFFF) >> 4) + 0x01
+
+Penurunan rumus:
+
+linear address -> 20 bit
+segment address -> 20 bit (1 left shift hexdigit dari segment selector)
+segment selector -> 16 bit
+offset -> 16 bit
+
+linear_address = (segment_selector << 4) + offset
+maks offset = 0xffff
+min offset = 0x0000 / tidak dituliskan
+
+linear address -> segment:offset
+
+syarat address valid:
+linear_address - (segment_selector << 4) <= 0xFFFF
+
+segment_selector >= ((linear_address - 0xFFFF) >> 4)
+
+misal: linear address -> 0xabcde
+
+segment_selector >= ((0xabcde - 0xffff) >> 4)
+
+segment_selector >= ((0x9bcdf) >> 4
+
+segment_selector >= 0x9bcd
+
+segment_selector >= 0x9bce (aproksimasi)
+
+
+Kembali ke contoh(2):
+
+segment_selector >= ((linear_address - 0xffff) >> 4) + 0x01
+segment_selector >= ((linear_address - 0xffff) >> 4) + 0x01
+
+segment_selector >= ((0x7523a - 0xffff) >> 4) + 0x01
+segment_selector >= 0x6524
+
+sehingga, segment_selector haruslah bernilai besar dari atau sama dengan 0x6524 agar segment:offset-nya valid.
+
+Oleh karena itulah 0x73AB bisa diambil menjadi segment_selector dan menghasilkan addres yang valid
+dikarenakan 0x73AB > 0x6524.
+
+
+
+
+
