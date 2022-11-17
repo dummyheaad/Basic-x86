@@ -37,7 +37,7 @@ workflow protected mode 80286:
 	* DPL -> Descriptor Privilege Level
 
 - jika pertidaksamaan salah	-> General Protection fault
-- jika pertidaksamaan benar	-> generate physical addres, yaitu 20-bit base address + 16-bit offset
+- jika pertidaksamaan benar	-> generate physical address, yaitu 20-bit base address + 16-bit offset
 				   base address terdapat pada descriptor table (diperoleh via indexing)
 				   
 				   
