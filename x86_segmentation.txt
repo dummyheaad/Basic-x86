@@ -1,0 +1,84 @@
+
+segment register
+-> CS, DS, SS, ES, FS, GS (FS dan GS untuk generasi 80386/i386 ke atas)
+ukuran: 16-bit
+
+flag CPL disimpan pada 2 lsb dari register CS
+
+flat memory model = linear memory model
+
+
+8086 (1978) 	-> segmentation (real mode), 20-bit logical address
+
+workflow real mode 8086:
+- logical address		-> 16 bit segment selector dan 16 bit offset
+- hitung segment address	-> segment selector << 4
+- hitung physical address	-> segment selector + offset -> hasilnya dalam 20 bit
+
+
+
+
+
+
+80286 (1982) 	-> segmentation (real mode), protected mode (load descriptor table LDT) (introduced), virtual memory (introduced), 24-bit address space
+		   cara switch protected ke real mode: force reset processor, triple fault
+
+workflow protected mode 80286:
+- logical address 		-> 16 bit segment selector dan 16 bit offset.
+- 16-bit segment selector	-> 2-bit rpl, 1-bit ti, 13 bit index
+				-> rpl = requested privilege level
+				-> ti  = table indicator (ti = 0 merujuk ke global descriptor table dan ti = 1 merujuk ke local descriptor tabel)
+				-> index = index pada table
+- dilakukan privilege check:
+	max(CPL, RPL) <= DPL
+	
+	* CPL -> Current Privilege Level
+	* RPL -> Requested Privilege Level
+	* DPL -> Descriptor Privilege Level
+
+- jika pertidaksamaan salah	-> General Protection fault
+- jika pertidaksamaan benar	-> generate physical addres, yaitu 20-bit base address + 16-bit offset
+				   base address terdapat pada descriptor table (diperoleh via indexing)
+				   
+				   
+
+
+
+
+80386/i386-32 and later-> real mode, protected mode, virtual memory, paging, + 2 segment register baru, yaitu FS dan GS
+		   cara switch protected ke real mode: reset bit di control register CS0
+	
+workflow protected mode i386:
+a. paging disabled
+   -> sama seperti workflow 80286, tapi ada penambahan ukuran offset dari 16-bit menjadi 32-bit dan segment base address meningkat dari 24-bit menjadi 32-bit
+   
+b. paging enabled
+   -> workflow paging disabled -> diperoleh virtual address -> diolah paging unit -> physical address
+
+	
+	
+	
+	
+		   
+x86-64		-> tidak support segmentation di mode 64-bit
+
+
+
+
+paragraph (segment base address)
+00000 -> 0
+00010 -> 16
+00020 -> 32
+00030 -> 48
+00040 -> 64
+.
+.
+.
+.
+ffff0 -> 1048560
+
+(kelipatan 16)
+
+ukuran per segment: 64 KB
+jarak antara paragraph: 16 byte
+dikarenakan 16 byte < 64 KB maka ada kemungkinan overlap antara satu segment dengan segment lainnya
