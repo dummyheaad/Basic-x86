@@ -1,0 +1,58 @@
+Ubah nilai berikut ke satuan bit
+a. 2 Kb         -> 2 * 10^3 bit             -> 2000 bit
+b. 2 Kib        -> 2 * 2^10 bit -> 2^11 bit -> 2048 bit
+c. 2 KB         -> 2 * 10^3 * 8 bit         -> 16000 bit
+d. 2 KiB        -> 2 * 2^10 * 8 bit         -> 16384 bit
+e. 1.5 Mb       -> 1.5 * 10^6 bit           -> 1500000 bit
+f. 1.5 Mib      -> 1.5 * 2^20 bit           -> 1572864 bit
+g. 1.5 MB       -> 1.5 * 10^6 * 8 bit       -> 12000000 bit
+h. 1.5 MiB      -> 1.5 * 2^20 * 8 bit       -> 12582912 bit
+
+Ubah nilai berikut ke satuan byte
+a. 3 KB         -> 3 * 10^3                 -> 3000 byte
+b. 3 KiB        -> 3 * 2^20                 -> 3072 byte
+c. 3 Kb         -> 3 * 2^10 / 8             -> 384 byte
+d. 2.5 Mb       -> 2.5 * 10^6 / 8           -> 312500 byte
+e. 2.5 MB       -> 2.5 * 10^6               -> 2500000 byte
+f. 2.5 MiB      -> 2.5 * 2^20               -> 2621440 byte
+g. 0.8 Gb       -> 0.8 * 10^9 / 8           -> 100000000 byte
+h. 0.8 Gib      -> 0.8 * 2^30 / 8           -> 107374182 byte
+i. 0.8 GiB      -> 0.8 * 2^30               -> 858993459 byte
+j. 0.8 GB       -> 0.8 * 10^9               -> 800000000 byte
+
+Ubah nilai berikut ke satuan megabit (Mb)
+a. 2.7 GB       -> 2.7 * 10^3 * 8           -> 21600 Mb
+e. 2.7 GiB      -> 2.7 * 2^10 * 8           -> 22118.4 Mb
+c. 2.7 Gb       -> 2.7 * 10^3               -> 2700 Mb
+d. 2.7 Gib      -> 2.7 * 2^10               -> 2764.8 Mb
+
+Ubah nilai berikut ke satuan gigabyte (GB)
+a. 3.1 TB       -> 3.1 * 10^3               -> 3100 GB
+b. 3.1 Tib      -> 3.1 * 2^10 / 8           -> 396.8 GB
+c. 3.1 Tb       -> 3.1 * 10^3 / 8           -> 387.5 GB
+d. 300 Gib      -> 300 * (2^30 / 10^9) / 8  -> 40.265 GB
+e. 500 Mb       -> 500 / 10^3 / 8           -> 0.0625 GB
+f. 270 Kib      -> 270 * (2^10 / 10^9) / 8  -> 3.456e-5 GB
+
+Keterangan:
+Kb              -> kilobit
+Kib             -> kilobinarybit (Kibibit)
+KB              -> kilobyte
+KiB             -> kilobinarybyte (Kibibyte)
+Mb              -> megabit
+Mib             -> megabinarybit (Mebibit)
+MB              -> megabyte
+MiB             -> megabinarybyte (Mebibyte)
+dst.
+
+1 byte = 8 bit
+1 bit = 1/8 byte
+
+1 Kib = 2^10 bit = 2^10 / 8 = 2^7 = 128 byte
+1 KiB = 2^10 byte = 8 * 2^10 = 2^13 = 8192 bit
+
+1 Kib = 1024 / 1000 Kb = 1.024 Kb
+1 Mib = 2^20 / 10^6 Mb = 1.048576 Mb
+1 Gib = 2^30 / 10^9 Gb = 1.073741824 Gb
+
+source: https://physics.nist.gov/cuu/Units/binary.html
