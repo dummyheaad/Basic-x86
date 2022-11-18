@@ -10,6 +10,9 @@
 
 ; PENTING !! perhatikan bahwa untuk proses div secara iteratif maka nilai edx harus selalu di-set 0 di setiap iterasi nya. Sehingga hal ini akan menyebabkan edx:eax bernilai sama dengan eax dimana eax adalah bilangan selanjutnya yang akan dibagi
 
+; Pada program ini, operasi push dilakukan dengan menggunakan register 32-bit, yaitu edx
+; Sehingga ukuran stack frame dari data yang di-push akan sama dengan ukuran ebp dan return address, yaitu 4 bytes
+
 global _start
 
 section .bss
