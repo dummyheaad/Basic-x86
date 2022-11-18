@@ -1,0 +1,47 @@
+Proses push menggunakan register dx. Sehingga ukuran stack frame dari data yang di-push adalah 2 bytes
+Kemudian ebp dan return address (eip) akan memiliki ukuran stack frame sebesar 4 byte
+
+
+Kondisi stack pada pemanggilan fungsi flip:
+
+ebp = ~
+
+.STACK
+--				<-- esp (6)
+(4bytes) ret_addr_flip		<-- esp (1)	esp (5)
+(4bytes) [ebp]			<-- esp (2)
+(2bytes) '3'			<-- esp (3)
+(2bytes) '7'			<-- esp (4)
+
+
+Kondisi stack pada pemanggilan fungsi print_flip
+
+ebp = ~
+
+.STACK
+--				<-- esp (1)
+(4bytes) ret_addr_print_flip	<-- esp (2)	esp (10)
+(4bytes) [ebp]			<-- esp (3)	esp (9)
+(2bytes) '3'			
+(2bytes) '7'			<-- esp (4)
+
+dari esp (3) ke esp (4): sub esp, 2*2
+
+
+Kondisi stack pada pemanggilan fungsi print (lanjutan fungsi print_flip)
+
+ebp = ~
+
+.STACK
+--				<-- esp (1)
+(4bytes) ret_addr_print_flip	<-- esp (2)
+(4bytes) [ebp]			<-- esp (3)
+(2bytes) '3'					esp *(7)
+(2bytes) '7'			<-- esp (4)	esp *(6)
+(4bytes) ret_addr_print		<-- esp (5)	esp(8)
+
+dari esp (5) ke esp *(6): esp + 4
+dari esp (6) ke esp *(7): esp + 6 (+4 dan + 2)
+* artinya esp masih tetap di esp (5) hanya saja dilakukan operasi aritmatika
+
+
