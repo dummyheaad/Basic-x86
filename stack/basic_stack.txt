@@ -10,9 +10,6 @@ Ukuran satu stack frame di x86 bergantung ke jenis register yang di-push.
 - konstanta							-> ukuran stack frame = 4 byte
 
 ukuran return address -> 4 byte karena address disimpan di register eip (extended instruction pointer)
-
-Proses navigasi pada stack untuk push menggunakan register 1 byte		: Ke Bawah X Frame:	ESP - 1.x byte
-										: Ke Atas X Frame:	ESP + 1.x byte
 										
 Proses navigasi pada stack untuk push menggunakan register 2 byte		: Ke Bawah X Frame:	ESP - 2.x byte
 										: Ke Atas X Frame:	ESP + 2.x byte
