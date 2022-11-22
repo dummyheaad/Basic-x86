@@ -4,20 +4,19 @@ Stack di x86
 Stack --> Tumbuh dari address tinggi menuju address rendah
 Navigasi pada stack di x86 menggunakan ESP (Extended Stack Pointer)
 Ukuran satu stack frame di x86 bergantung ke jenis register yang di-push.
-- 1 byte register (al, bl, cl, dl, ah, bh, ch, dh) 		-> ukuran stack frame = 1 byte
+- 1 byte register (al, bl, cl, dl, ah, bh, ch, dh) 		-> TIDAK BISA DI-PUSH
 - 2 byte register (ax, bx, cx, dx, si, di)			-> ukuran stack frame = 2 byte
 - 4 byte register (eax, ebx, ecx, edx, esi, edi, ebp, esp) 	-> ukuran stack frame = 4 byte
+- konstanta							-> ukuran stack frame = 4 byte
 
 ukuran return address -> 4 byte karena address disimpan di register eip (extended instruction pointer)
-
-Proses navigasi pada stack untuk push menggunakan register 1 byte		: Ke Bawah X Frame:	ESP - 1.x byte
-										: Ke Atas X Frame:	ESP + 1.x byte
 										
 Proses navigasi pada stack untuk push menggunakan register 2 byte		: Ke Bawah X Frame:	ESP - 2.x byte
 										: Ke Atas X Frame:	ESP + 2.x byte
 
 Proses navigasi pada stack untuk push menggunakan register 4 byte		: Ke Bawah X Frame:	ESP - 4.x byte
 										: Ke Atas X Frame:	ESP + 4.x byte
+
 
 
 .BSS
