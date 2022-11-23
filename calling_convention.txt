@@ -1,0 +1,68 @@
+Calling Convention
+Merupakan suatu aturan non-formal yang ditetapkan oleh programmer mengenai cara untuk memanggil (call) dan mengembalikan (ret) suatu fungsi.
+
+Salah satu contoh calling convention adalah C language calling convention.
+Jenis convention ini berbasisikan kepada penggunaan stack di x86.
+Sehingga implementasinya akan menggunakan instruksi seperti push, pop, call dan ret.
+
+Pada C calling convention, terdapat 2 buah rules, yaitu:
+a. Caller Rules (Aturan untuk fungsi pemanggil)
+    1. Simpan nilai caller-saved register, yaitu eax, ecx, dan edx (opsional).
+       Hal ini bisa dilakukan dengan mem-push masing-masing nilai ke stack.
+
+    2. Push parameter fungsi (jika ada) ke dalam stack.
+       Parameter di-push dalam urutan terbalik (untuk multi-parameter).
+       Alasan: parameter yang di-push terakhir akan di-pop pertama. Sehingga parameter pertama akan di-pop terlebih dahulu
+       Parameter akan selalu dimulai pada offset ebp + 8 di stack.
+       Nilai parameter selanjutnya akan tersimpan di ebp + 10/12, ebp + 12/16 (bergantung ke tipe data yang digunakan (apakah 2 bit atau 4 bit)
+
+    3. Panggil fungsi yang akan dijalankan dengan memakai instruksi call
+
+    4. Setelah fungsi dijalankan maka return value akan disimpan di register eax
+
+    5. Lakukan dealokasi memori pada stack dengan memakai instruksi add
+
+    6. Lakukan restorasi nilai caller-saved register, yaitu eax, ecx, dan edx dengan melakukan pop terhadap nilai tersebut dari stack (opsional).
+
+b. Callee Rules (Aturan untuk fungsi yang dipanggil)
+    1. Jalankan function prologue
+       push ebp
+       mov ebp, esp
+
+    2. Alokasikan memori untuk local variable
+       Ada 2 cara:
+       1. push (langsung push-saja)
+       2. sub + mov (sub untuk alokasi memori sekian byte dan mov untuk inisialisasi masing-masing nilai variabel lokal pada stack)
+
+    3. Simpan nilai callee-saved register, yaitu ebx, edi dan esi (opsional)
+
+    4. Setelah fungsi dijalankan, letakkan return value di eax
+
+    5. restore nilai ebx, edi, dan esi (opsional)
+
+    6. Jalankan function epilogue
+       mov esp, ebp
+       pop ebp
+
+    7. Jalankan perintah ret
+
+
+Struktur dasar fungsi dengan calling convention C adalah sebagai berikut:
+
+func:
+    ; function prologue
+    push ebp
+    mov ebp, esp
+
+    ; function body
+
+    ; function epilogue
+    mov esp, ebp
+    pop ebp
+    ret
+
+    ; bentuk alternatif dari function epilogue
+    leave
+    ret
+
+
