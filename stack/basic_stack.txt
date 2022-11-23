@@ -1,5 +1,3 @@
-Recall Concept
-==============
 Stack di x86
 Stack --> Tumbuh dari address tinggi menuju address rendah
 Navigasi pada stack di x86 menggunakan ESP (Extended Stack Pointer)
@@ -8,6 +6,7 @@ Ukuran satu stack frame di x86 bergantung ke jenis register yang di-push.
 - 2 byte register (ax, bx, cx, dx, si, di)			-> ukuran stack frame = 2 byte
 - 4 byte register (eax, ebx, ecx, edx, esi, edi, ebp, esp) 	-> ukuran stack frame = 4 byte
 - konstanta							-> ukuran stack frame = 4 byte
+- variable							-> ukuran stack frame = 2 atau 4 byte (tidak bisa 1 byte jika instruksi yang digunakan adalah push.)
 
 ukuran return address -> 4 byte karena address disimpan di register eip (extended instruction pointer)
 										
@@ -16,3 +15,40 @@ Proses navigasi pada stack untuk push menggunakan register 2 byte		: Ke Bawah X 
 
 Proses navigasi pada stack untuk push menggunakan register 4 byte		: Ke Bawah X Frame:	ESP - 4.x byte
 										: Ke Atas X Frame:	ESP + 4.x byte
+
+Cara memasukkan / memindahkan data ke stack:
+a. push
+   ukuran register / memori minimial 16-bit atau 2 byte (di dokumentasi tertulis push r/mem16 dan push r/mem32)
+   Push bekerja dengan melakukan decrement terhadap pointer esp kemudian melakukan move data ke alamat yang ditunjuk esp
+   Nilai decrement bergantung ke ukuran register / size yang dispesifikasikan.
+   memori 1 byte bisa di-push dengan menspesifikasikan size word ataupun dword
+   contoh:
+   push ax		; bisa digunakan, ukuran stack frame = 2 byte
+   push eax		; bisa digunakan, ukuran stack frame = 4 byte
+   push word [var]	; bisa digunakan, ukuran stack frame = 2 byte
+   push dword [var]	; bisa digunakan, ukuran stack frame = 4 byte
+   
+b. sub + mov
+   merupakan cara alternatif selain metode push.
+   Keuntungannya adalah kita bisa menginput data 1 byte ke dalam stack
+   contoh:
+   sub esp, 1		; alokasikan memori 1 byte pada stack
+   mov esp, [var]	; masukkan data ke dalam stack frame (var adalah variabel 1 byte)
+
+Cara restore / menghapus elemen pada stack
+a. pop
+   perintah ini akan me-restore / mengembalikan data ke operand yang diberikan kemudian menghapus data dengan melakukan increment pada pointer esp
+   (Perhatikan bahwa kata "menghapus" sebenarnya tidak benar2 menghapus data pada stack. Data masih akan tetap ada pada stack namun data ini sewaktu2
+   bisa di-overwrite dengan nilai lain)
+   Nilai increment bergantung ke ukuran register / size yang dispesifikasikan.
+   contoh:
+   pop ax		; kembalikan nilai yang ada di address yang ditunjuk esp ke register ax, kemudian inc esp
+   pop eax		; kembalikan nilai yang ada di address yang ditunjuk esp ke register eax, kemudian inc esp
+   pop word [var3]	; kembalikan nilai yang ada di address yang ditunjuk esp ke memori dengan label var3, kemudian inc esp
+   
+b. add + mov
+   merupakan cara alternatif selain metode pop.
+   Keuntungannya adalah kita bisa merestore data dengan ukuran 1 byte yang tersimpan di stack
+   contoh:
+   mov [var], esp
+   add esp, 1
