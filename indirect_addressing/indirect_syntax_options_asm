@@ -1,0 +1,28 @@
+; Indirect Syntax Options
+; Terdapat 2 opsi untuk Indirect Addressing, yaitu:
+; a. mem[reg32 + reg32]     atau    reg32[reg32 + reg32]
+; b. [mem + reg32 + reg32]  atau    [reg32 + reg32 + reg32]
+;   
+; 
+
+global _start
+
+section .bss
+
+section .data
+    myarr dw 20, 237, 45, 18, 215
+    slash_n db 0x0a
+    sf equ 2
+
+section .text
+_start:
+    mov ecx, myarr
+    
+    mov esi, 4
+    mov edi, 4
+
+    xor ebx, ebx
+    mov bx, myarr[esi + edi]
+    ; mov bx, [myarr + esi + edi]
+    mov eax, 1
+    int 0x80
