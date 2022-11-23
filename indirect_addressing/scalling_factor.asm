@@ -19,6 +19,11 @@
 ; pemakaian displacement umumnya tidak diperlukan karena setiap elemen
 ; array bisa diakses via base + (index * scale) saja.
 
+; keyword ds:, ss:, cs:, dll pada umumnya tidak dihiraukan oleh OS modern
+; Hal ini dikarenakan OS sekarang memiliki memory model flat
+; Sehingga semua segment berada dalam satu buah flat address space
+; dimana memory protection dilakukan dengan paging
+; source: https://stackoverflow.com/questions/3819699/what-does-ds40207a-mean-in-assembly
 
 global _start
 
