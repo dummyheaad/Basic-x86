@@ -33,7 +33,7 @@ b. sub + mov
    Keuntungannya adalah kita bisa menginput data 1 byte ke dalam stack
    contoh:
    sub esp, 1		; alokasikan memori 1 byte pada stack
-   mov esp, [var]	; masukkan data ke dalam stack frame (var adalah variabel 1 byte)
+   mov [esp], [var]	; masukkan data ke dalam alamat stack frame yang sedang ditunjuk oleh esp(var adalah variabel 1 byte)
 
 Cara restore / menghapus elemen pada stack
 a. pop
@@ -50,5 +50,5 @@ b. add + mov
    merupakan cara alternatif selain metode pop.
    Keuntungannya adalah kita bisa merestore data dengan ukuran 1 byte yang tersimpan di stack
    contoh:
-   mov [var], esp
-   add esp, 1
+   mov [var], [esp] ; pindahkan data yang tersimpan pada alamat yang sedang ditunjuk oleh esp ke variabel var
+   add esp, 1       ; geser esp satu address ke atas 9kosongkan memori stack 1 byte)
