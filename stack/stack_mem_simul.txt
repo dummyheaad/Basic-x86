@@ -1,54 +1,76 @@
-Stack di x86
-Stack --> Tumbuh dari address tinggi menuju address rendah
-Navigasi pada stack di x86 menggunakan ESP (Extended Stack Pointer)
-Ukuran satu stack frame di x86 bergantung ke jenis register yang di-push.
-- 1 byte register (al, bl, cl, dl, ah, bh, ch, dh) 		-> TIDAK BISA DI-PUSH
-- 2 byte register (ax, bx, cx, dx, si, di)			-> ukuran stack frame = 2 byte
-- 4 byte register (eax, ebx, ecx, edx, esi, edi, ebp, esp) 	-> ukuran stack frame = 4 byte
-- konstanta							-> ukuran stack frame = 4 byte
-- variable							-> ukuran stack frame = 2 atau 4 byte (tidak bisa 1 byte jika instruksi yang digunakan adalah push.)
+mov [esp], 23
 
-ukuran return address -> 4 byte karena address disimpan di register eip (extended instruction pointer)
-										
-Proses navigasi pada stack untuk push menggunakan register 2 byte		: Ke Bawah X Frame:	ESP - 2.x byte
-										: Ke Atas X Frame:	ESP + 2.x byte
+0xabcdefaa | 23      <- esp
+0xabcdefa9
+0xabcdefa8
+0xabcdefa7
+0xabcdefa6
 
-Proses navigasi pada stack untuk push menggunakan register 4 byte		: Ke Bawah X Frame:	ESP - 4.x byte
-										: Ke Atas X Frame:	ESP + 4.x byte
+sub esp, 4
 
-Cara memasukkan / memindahkan data ke stack:
-a. push
-   ukuran register / memori minimial 16-bit atau 2 byte (di dokumentasi tertulis push r/mem16 dan push r/mem32)
-   Push bekerja dengan melakukan decrement terhadap pointer esp kemudian melakukan move data ke alamat yang ditunjuk esp
-   Nilai decrement bergantung ke ukuran register / size yang dispesifikasikan.
-   memori 1 byte bisa di-push dengan menspesifikasikan size word ataupun dword
-   contoh:
-   push ax		; bisa digunakan, ukuran stack frame = 2 byte
-   push eax		; bisa digunakan, ukuran stack frame = 4 byte
-   push word [var]	; bisa digunakan, ukuran stack frame = 2 byte
-   push dword [var]	; bisa digunakan, ukuran stack frame = 4 byte
-   
-b. sub + mov
-   merupakan cara alternatif selain metode push.
-   Keuntungannya adalah kita bisa menginput data 1 byte ke dalam stack
-   contoh:
-   sub esp, 1		; alokasikan memori 1 byte pada stack
-   mov [esp], [var]	; masukkan data ke dalam alamat stack frame yang sedang ditunjuk oleh esp(var adalah variabel 1 byte)
+0xabcdefaa | 23
+0xabcdefa9 | xx
+0xabcdefa8 | xx
+0xabcdefa7 | xx
+0xabcdefa6 | xx     <- esp
 
-Cara restore / menghapus elemen pada stack
-a. pop
-   perintah ini akan me-restore / mengembalikan data ke operand yang diberikan kemudian menghapus data dengan melakukan increment pada pointer esp
-   (Perhatikan bahwa kata "menghapus" sebenarnya tidak benar2 menghapus data pada stack. Data masih akan tetap ada pada stack namun data ini sewaktu2
-   bisa di-overwrite dengan nilai lain)
-   Nilai increment bergantung ke ukuran register / size yang dispesifikasikan.
-   contoh:
-   pop ax		; kembalikan nilai yang ada di address yang ditunjuk esp ke register ax, kemudian inc esp
-   pop eax		; kembalikan nilai yang ada di address yang ditunjuk esp ke register eax, kemudian inc esp
-   pop word [var3]	; kembalikan nilai yang ada di address yang ditunjuk esp ke memori dengan label var3, kemudian inc esp
-   
-b. add + mov
-   merupakan cara alternatif selain metode pop.
-   Keuntungannya adalah kita bisa merestore data dengan ukuran 1 byte yang tersimpan di stack
-   contoh:
-   mov [var], [esp] ; pindahkan data yang tersimpan pada alamat yang sedang ditunjuk oleh esp ke variabel var
-   add esp, 1       ; geser esp satu address ke atas (kosongkan memori stack 1 byte)
+mov [esp], byte 3
+
+0xabcdefaa | 23
+0xabcdefa9 | xx
+0xabcdefa8 | xx
+0xabcdefa7 | xx
+0xabcdefa6 | 03     <- esp
+
+add esp, 2
+
+0xabcdefaa | 23
+0xabcdefa9 | xx     
+0xabcdefa8 | xx     <- esp
+0xabcdefa7 | xx
+0xabcdefa6 | 03
+
+mov [esp], word 0xaabb
+
+0xabcdefaa | 23
+0xabcdefa9 | aa     
+0xabcdefa8 | bb     <- esp
+0xabcdefa7 | xx
+0xabcdefa6 | 03
+
+push 0x23
+
+0xabcdefaa | 23
+0xabcdefa9 | aa
+0xabcdefa8 | bb
+0xabcdefa7 | 23     <- esp
+0xabcdefa6 | 03
+
+* xx = belum ada nilai / nilai tidak diketahui
+* memory direpresentasikan dalam 8 digit hexa karena sistem
+  adalah 32-bit
+* asumsi stack menggunakan Little-Endian
+  Little-endian: lowest address diisi LSB kemudian sisanya berurutan
+                 dari byte terkecil - terbesar
+                 gambaran:
+                 lowest address -> highest address
+                 LSB            -> MSB
+
+  Big-endian: lowest address diisi msb kemudian sisanya berurutan
+              dari byte terbesar - terkecil
+              gambaran:
+              lowest address -> highest address
+              MSB            -> LSB
+
+ Contoh: 0xab093267
+ Little-Endian:
+    0x1000 => 0x67
+    0x1001 => 0x32
+    0x1002 => 0x09
+    0x1003 => 0xab
+ Big-Endian:
+    0x1000 => 0xab
+    0x1001 => 0x09
+    0x1002 => 0x32
+    0x1003 => 0x67
+
