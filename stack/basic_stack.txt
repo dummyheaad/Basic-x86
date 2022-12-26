@@ -51,4 +51,4 @@ b. add + mov
    Keuntungannya adalah kita bisa merestore data dengan ukuran 1 byte yang tersimpan di stack
    contoh:
    mov [var], [esp] ; pindahkan data yang tersimpan pada alamat yang sedang ditunjuk oleh esp ke variabel var
-   add esp, 1       ; geser esp satu address ke atas 9kosongkan memori stack 1 byte)
+   add esp, 1       ; geser esp satu address ke atas (kosongkan memori stack 1 byte)
