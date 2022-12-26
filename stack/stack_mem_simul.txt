@@ -1,18 +1,24 @@
 mov [esp], 23
 
 0xabcdefaa | 23      <- esp
-0xabcdefa9
-0xabcdefa8
-0xabcdefa7
-0xabcdefa6
+0xabcdefa9 | xx
+0xabcdefa8 | xx
+0xabcdefa7 | xx
+0xabcdefa6 | xx
+0xabcdefa5 | xx
+0xabcdefa4 | xx
+0xabcdefa3 | xx
 
-sub esp, 4
+sub esp, 7
 
 0xabcdefaa | 23
 0xabcdefa9 | xx
 0xabcdefa8 | xx
 0xabcdefa7 | xx
-0xabcdefa6 | xx     <- esp
+0xabcdefa6 | xx
+0xabcdefa5 | xx
+0xabcdefa4 | xx
+0xabcdefa3 | xx     <- esp
 
 mov [esp], byte 3
 
@@ -20,31 +26,54 @@ mov [esp], byte 3
 0xabcdefa9 | xx
 0xabcdefa8 | xx
 0xabcdefa7 | xx
-0xabcdefa6 | 03     <- esp
+0xabcdefa6 | xx     
+0xabcdefa5 | xx
+0xabcdefa4 | xx
+0xabcdefa3 | 03     <- esp
 
-add esp, 2
+add esp, 1
 
 0xabcdefaa | 23
-0xabcdefa9 | xx     
-0xabcdefa8 | xx     <- esp
+0xabcdefa9 | xx
+0xabcdefa8 | xx
 0xabcdefa7 | xx
-0xabcdefa6 | 03
+0xabcdefa6 | xx     
+0xabcdefa5 | xx     
+0xabcdefa4 | xx     <- esp
+0xabcdefa3 | 03
 
 mov [esp], word 0xaabb
 
 0xabcdefaa | 23
-0xabcdefa9 | aa     
-0xabcdefa8 | bb     <- esp
+0xabcdefa9 | xx
+0xabcdefa8 | xx
 0xabcdefa7 | xx
-0xabcdefa6 | 03
+0xabcdefa6 | xx     
+0xabcdefa5 | aa   
+0xabcdefa4 | bb     <- esp
+0xabcdefa3 | 03
 
-push 0x23
+add esp, 2
 
 0xabcdefaa | 23
-0xabcdefa9 | aa
-0xabcdefa8 | bb
-0xabcdefa7 | 23     <- esp
-0xabcdefa6 | 03
+0xabcdefa9 | xx
+0xabcdefa8 | xx
+0xabcdefa7 | xx
+0xabcdefa6 | xx     <- esp
+0xabcdefa5 | aa   
+0xabcdefa4 | bb     
+0xabcdefa3 | 03
+
+push 0x4a21
+
+0xabcdefaa | 23
+0xabcdefa9 | 00
+0xabcdefa8 | 00
+0xabcdefa7 | 4a
+0xabcdefa6 | 21     <- esp     
+0xabcdefa5 | aa   
+0xabcdefa4 | bb
+0xabcdefa3 | 03
 
 * xx = belum ada nilai / nilai tidak diketahui
 * memory direpresentasikan dalam 8 digit hexa karena sistem
