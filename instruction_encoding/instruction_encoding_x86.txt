@@ -1,0 +1,391 @@
+Encoding/Decoding x86 Instructions
+==================================
+
+Total byte pada encoding diagram adalah 16 byte, yaitu:
+- 4 byte prefix
+- 2 byte instruction opcode
+- 1 byte mod-reg-r/m
+- 1 byte SIB  (Scaled Index Byte)
+- 4 byte Displacement (konstanta pada pengaksesan memori)
+- 4 byte Immediate (karena x86 32-bit)
+
+Meskipun sekilas terlihat bahwa diagram bisa memuat 16 byte.
+Namun x86 sendiri tidak mengizinkan sebuah instruksi memiliki panjang lebih dari 15 byte.
+Artinya untuk setiap instruksi haruslah berukuran <= 15 byte.
+
+Opcode Expansion Prefix merujuk pada adanya byte 0x0F pada 1 byte pertama di bagian instruction opcode.
+Kemudian 1 byte sisanya diisi dengan opcode dari instruksi sebenarnya.
+
+Prefix Bytes != Opcode Expansion Prefix
+Prefix Bytes memiliki fungsi khusus untuk memodifikasi behavior suatu instruksi.
+Berikut adalah format dari Prefix Bytes:
+
+	Instruction Prefix | Address-size Prefix | Operand-size Prefix | Segment override
+	     0/1 byte		   0/1 byte		0/1 byte	     0/1 byte
+	     
+Prefix Byte disebut juga dengan Optional Instruction Prefix
+
+
+Instruction Opcode
+Opcode merupakan singkatan dari Operations Code.
+Opcode merupakan nilai hasil pemetaan suatu instruksi ke suatu nilai yang sudah ditetapkan (distandarisasi).
+Pada umumnya opcode dituliskan dalam heksadesimal.
+Opcode dengan ukuran 1 byte akan direpresentasikan dalam 2 digit hex (0xhh).
+Opcode dengan ukuran 2 byte akan direpresentasikan dalam 4 digit hex (0x0Fhh).
+Instruction Opcode merupakan nilai opcode dari suatu instruksi.
+Nilai opcode dari suatu instruksi ini lah yang kelak akan dibaca dan dipahami oleh komputer / CPU.
+Setiap instruksi pada x86 memiliki opcode-nya masing-masing.
+Oleh karena itu, terdapat instruction opcode table dimana setiap record-nya merupakan instruksi beserta opcode-nya.
+Daftar Instruction Opcode dapat dilihat pada website berikut:
+		http://ref.x86asm.net/coder32.html
+x86 mendukung 2 jenis ukuran opcode:
+    - one-byte opcode (standard)
+    - two-byte opcode (0x0F prefix + actual instruction opcode)
+Sehingga x86 bisa mendukung total 512 jenis instruksi yang berbeda
+Nilai 512 didapat dari:
+Terdapat 2 byte ruang untuk opcode.
+1 byte pertama bisa diisi oleh 0x00 atau 0x0F			-> ada 2 kemungkinan
+1 byte kedua bisa diisi oleh nilai dari 0x00 sampai 0xFF	-> ada 2^8 kemungkinan
+Sehingga dengan prinsip permutasi diperoleh semua kemungkinan instruksi, yaitu:
+total_instruksi_yang_ada = 2 * 2 ^8
+total_instruksi_yang_ada = 2^9
+total_instruksi_yang_ada = 512
+Namun, x86 sendiri tidak memakai semua kemungkinan yang ada (not yet).
+Untuk semua instruksi dengan format a b, c. Maka terdapat 2 least significant bit pada suffix opcode a, yaitu:
+
+					xxxxxxds
+					
+- d		=> direction bit (arah aliran data)
+  1. d = 0 --> direction dari register -> memory
+  2. d = 1 --> direction dari memory -> register
+  
+- s		= size bit (ukuran operand)
+  1. s = 0 --> operand berukuran 8 bit
+  2. s = 1 --> operand berukuran 16/32 bit (x86 default: 32-bit, penggunaan 16-bit melibatkan penambahan prefix byte sehingga instruksi lebih banyak memakan memori)
+
+
+mod-reg-r/m byte
+mod-reg-r/m field memiliki ukuran sebesar 1 byte.
+Berikut adalah format nya:
+		
+		7 6 	| 	5 4 3 	  | 	2 1 0
+		mod 	|  	reg  	  |  	r/m
+		2-bit	       3-bit	   	3-bit
+a. mod
+   -> mode ==> mode ==> addressing mode
+   mod terdiri atas 2-bit yang mengisi bit ke-6 dan ke-7.
+   Bagian bit ini digunakan untuk memberi keterangan mode pengalamatan (addressing mode).
+   2-bit berarti terdapat 4 kemungkinan nilai, yaitu:
+   - 00		-> indirect addressing mode / SIB tanpa displ. saat field r/m = 100
+   		   displ. only addressing mode saat field r/m = 101
+   - 01		-> one-byte signed displacement follows addressing mode byte(s)
+   - 10		-> four-byte signed displacement follows addressing mode byte(s)
+   - 11		-> register addressing mode
+   
+b. reg/opcode
+   -> reg ==> register, bisa source / destination bergantung pada nilai bit d pada opcode-nya.
+   Selain itu, ukuran register juga bergantung pada bit s pada opcode-nya.
+   Bagian bit ini terdiri atas 3-bit yang mengisi bit ke-3, 4, dan 5.
+   3-bit berarti terdapat 8 kemungkinan nilai, yaittu:
+   - 000	-> al, ax, eax (bergantung ke bit-s pada opcode)
+   - 001	-> cl, cx, ecx (bergantung ke bit-s pada opcode)
+   - 010	-> dl, dl, edx (bergantung ke bit-s pada opcode)
+   - 011	-> bl, bx, ebx (bergantung ke bit-s pada opcode)
+   - 100	-> ah, sp, esp (bergantung ke bit-s pada opcode)
+   - 101	-> ch, bp, ebp (bergantung ke bit-s pada opcode)
+   - 110	-> dh, si, esi (bergantung ke bit-s pada opcode)
+   - 111	-> bh, di, edi (bergantung ke bit-s pada opcode)
+   
+c. r/m
+   -> r/m ==> register / memory
+   Bit ini digunakan bersamaan dengan bit MOD untuk menspesifikasikan apakah operand yang ada di sini
+   berupa register atau memory. Memory disini artinya adalah memori yang disimpan oleh suatu register.
+   Misal mov eax, var. Maka eax akan menyimpan alamat memori dari variabel var.
+
+d. MOD + r/m (MODr/m)
+   -> Kombinasi dari kedua bagian bit ini akan membentuk operand kedua.
+   Sehingga pada suatu instruksi yang membutuhkan 2 operand maka:
+   - Operand pertama disimpan pada register REG
+   - Operand kedua disimpan pada register MODr/m
+   Bit d (direction) pada opcode instruksi akan menentukan aliran data, yaitu:
+   d = 0, berarti MODR/M <- REG
+   d = 1, berarti REG <- MODR/M
+   Dari sini terlihat bahwa kita tidak bisa melakukan instruksi dengan kedua operand berupa alamat memori.
+   Secara umum, MODr/m akan menentukan jenis operan, yaitu:
+   - register, jika MOD = 11. Sedangkan r/m akan mengikuti tabel REG
+   - memory untuk sisa nya
+   	a. MOD = 00 -> addressing tanpa displacement (konstanta yang ditambahkan ke address)
+   	b. MOD = 01 -> addressing dengan 1 byte displacement (disp8)
+   	c. MOD = 10 -> addressing dengan 4 byte displacement (disp32)
+     * untuk displacement 16-bit, digunakan MOD = 10 (extended)
+   
+
+SIB (Scaled Index Byte)
+Merupakan byte yang digunakan pada scalling index.
+
+	Address = Base + Scale*Index
+
+Berikut adalah format dari SIB:
+	7   6      5      4      3    2   1   0
+	Scale	|	Index	    |   Base
+	
+- Scale -> pengali dari index. Scale memiliki 2-bit sehingga ada 4 kemungkinan nilai:
+	a. 00	-> index*1
+	b. 01	-> index*2
+	c. 10	-> index*4
+	d. 11	-> index*8
+
+- Index -> register yang akan dikalikan. Index memiliki 3-bit sehingga ada 8 kemungkinan nilai:
+	000	-> eax
+	001	-> ecx
+	010	-> edx
+	011	-> ebx
+	100	-> Illegal (tidak oleh digunakan)
+	101	-> ebp
+	110	-> esi
+	111	-> edi
+	
+- Base  -> base address yang disimpan pada register / berupa suatu konstanta. Base memiliki 3-bit sehingga
+  terdapat 8 kemungkinan nilai:
+	000	-> eax
+	001	-> ecx
+	010	-> edx
+	011	-> ebx
+	100	-> esi
+	101	-> bisa ebp (MOD = 01 / 10) atau displ. only (MOD = 00)
+	110	-> esi
+	111	-> edi
+
+Displacement
+Merupakan suatu konstanta atau nilai yang ditambahkan ke suatu address untuk menghitung address dari elemen lain.
+Contoh:
+global _start
+.section data
+    arr db 1, 3, 5
+    
+.section text
+_start
+    mov ax, [arr + 1]
+    
+Maka ax akan mengambil nilai dari elemen kedua pada arr, yaitu 3.
+
+Immediate
+Merupakan suatu konstanta. Dapat berupa 1,2 atau 4 byte. Format nilai dapat ditulis dalam biner, desimal, maupun 
+heksadesimal.
+
+Contoh Encoding Instruksi
+a. ADD CL, AL
+   1. opcode
+   ADD -> 00 sampai 03 -> 0000 0000 sampai 0000 0011
+   Operand melibatkan 2 register berukuran 1 bye.
+   Sehingga diperoleh bit s = 0.
+   Kemudian juga diperoleh bit d = 0, artinya aliran data berasal dari REG -> MODR/M
+   ADD -> 00 -> opcode yang sesuai
+   
+   2. mod-reg-r/m
+   Pada instruksi terlihat bahwa operasi dilakukan oleh 2 operand yang sama-sama register.
+   Maka diperoleh mod = 11.
+   Operand source menggunakan register AL, sehingga diperoleh REG = 000
+   Operand destination merupakan register CL sehingga diperoleh r/m = 001
+   
+   3. SIB 
+   tidak ada
+   
+   4. Displacement
+   tidak ada
+   
+   5. Immediate
+   tidak ada
+   
+   Overall:
+   opcode = 0000 000		-> 00
+   mod-reg-r/m = 1100 0001	-> C1
+   
+   Hasil Encoding: ADD CL, AL	-> 00 C1
+   
+   Namun, ternyata kita juga bisa membuat 1 encoding yang juga ekuivalen dengan instruksi yang diberikan, yaitu:
+   ADD CL, AL	-> 01 C8
+   
+   Pada saat d = 1, aliran data adalah MODR/M -> REG
+   Maka REG diisi CL dan MODR/M diisi AL
+   
+   sehingga diperoleh MOD-REG-R/M: 1100 1000 -> C8
+   
+   Sehingga, diperoleh hasil encoding keseluruhan, yaitu:
+   ADD CL, AL	-> 00 C1
+   ADD CL, AL	-> 01 C8
+   
+   Dari sini terlihat bahwa untuk satu buah instruksi dengan 2 operand maka akan terdapat 2 buah versi
+   encoding-nya.
+   
+b. ADD ECX, EAX
+   1. opcode
+   ADD -> 00 sampai 03 -> 0000 0000 sampai 0000 0011
+   misal: d = 0
+   s = 1 (32-bit data)
+   = 00000001 => 0000 0001 => 01
+   
+   2. mod-reg-r/m
+   d = 0, REG -> MODR/M
+   REG : EAX -> 000
+   R/M: ECX -> 001
+   MODR/M: ECX -> 11
+   = 11000001 => 1100 0001 => C1
+   
+   ADD ECX, EAX -> 01 C1
+   
+   1. opcode
+   ADD -> 00 sampai 03 -> 0000 0000 sampai 0000 0011
+   misal: d = 1
+   s = 1
+   = 00000011 => 0000 0011 => 03
+   
+   2. mod-reg-r/m
+
+   d = 1, MODR/M -> REG
+   R/M = EAX, 000
+   REG = ECX, 001
+   MOD = 11 (reg - reg)
+   = 11001000 = 1100 1000 = C8
+   
+   ADD ECX, EAX -> 03 C8
+   
+   Sehingga, diperoleh hasil encoding secara keseluruhan, yaitu:
+   ADD ECX, EAX => 01 C1
+   ADD ECX, EAX => 03 C8
+   
+c. ADD EDX, DISPL
+   1. opcode
+   ADD -> 00 sampai 03 -> 0000 0000 sampai 0000 0011
+   misal: d = 0
+   EDX -> 32-bit maka DISPL = 32-bit
+   s = 1
+   = 00000001 = 01
+   
+   2. mod-reg-r/m
+   mod = 10 (reg - 4 bytes displacement)
+   d = 0, REG -> MODR/M
+   R/M = EDX = 010
+   REG = 101 (displacement only)
+   = 10101010 => 1010 1010 => AA
+   
+   ADD EDX, DISPL => 01 AA ww xx yy zz
+   
+   1. opcode
+   ADD -> 00 sampai 03 -> 0000 0000 sampai 0000 0011
+   misal: d = 1
+   EDX -> 32-bit maka DISPL = 32-bit
+   s = 1
+   = 00000011 = 0000 0011 = 03
+   
+   2. mod-reg-r/m
+   d = 1, MODR/M -> REG
+   REG = EDX = 010
+   R/M = 101
+   MOD = 00
+   = 00101010 = 0010 1010 = 15
+   
+   ADD EDX, DISPL => 03 15 ww xx yy zz
+   
+   Sehingga, diperoleh hasil encoding secara keseluruhan, yaitu:
+   ADD EDX, DISPL => 01 AA ww xx yy zz
+   ADD EDX, DISPL => 03 15 ww xx yy zz
+   * ww xx yy zz adalah 4 byte displacement yang direpresentasikan oleh 8 digit hex (4 x 2)
+   
+d. ADD EDI, [EBX]
+   1. opcode
+   misal d = 0
+   s = 1 (32-bit)
+   = 00000001 = 0000 0001 = 01
+   
+   2. mod-reg-r/m
+   d = 0. REG -> MODR/M
+   REG = [EBX] = 011
+   R/M = EDI = 111
+   mod = 11 (reg - reg)
+   = 11011111 = 1101 1111 = DF
+   
+   ADD EDI, [EBX] = 01 DF
+   
+   1. opcode
+   misal d = 1
+   s = 1 (32-bit)
+   = 00000011 = 0000 0011 = 03
+   
+   2. mod-reg-r/m
+   d = 1, MODR/M -> REG
+   REG = EDI = 111
+   MODR/M = 00 011
+   = 0011 1011 = 3B
+   
+   ADD EDI, [EBX] = 03 3B
+   
+   Sehingga, diperoleh hasil encoding secara keseluruhan, yaitu:
+   ADD EDI, [EBX] = 01 DF
+   ADD EDI, [EBX] = 03 3B
+   
+e. ADD EBP, [disp32 + EAX*1]
+   1. opcode
+   d = 1
+   s = 1 (32-bit)
+   = 0000 0011 = 03
+   
+   2. mod-reg-r/m
+   d = 1, MODR/M -> REG
+   REG = EBP = 101
+   MODR/M = 00 100 (SIB MODE)
+   = 0010 1100 = 2C
+   
+   3. SIB
+   Scale = 00
+   Index = 000
+   Base = 101
+   = 0000 0101 = 05
+   
+   4. Disp32
+   ww xx yy zz
+   
+   ADD EBP, [disp32 + EAX*1] = 03 2C 05 ww xx yy zz
+   
+d. ADD ECX, [EBX + EDI*4]
+   1. opcode
+   d = 1
+   s = 1 (32-bit)
+   = 0000 0011 = 03
+   
+   2. mod-reg-r/m
+   d =1 , MODR/M -> REG
+   REG = ECX = 001
+   MODR/M = 00 100 (SIB MODE)
+   = 00001100 = 0000 1100 = 0C
+   
+   3. SIB
+   Scale = 10
+   Index = 111
+   Base = 011
+   = 11111011 = 1011 1011 = BB
+   
+   ADD ECX, [EBP + EDI*4] = 03 0C BB
+   
+e. ADD ECX, 0x00000004
+   1. opcode
+   s = 1 (32-bit)
+   x = 0 (same size)
+   msb = 1
+   100000010 = 1000 0010 = 82
+   
+   2. mod-reg-r/m
+   REG = 000 (add immediate)
+   MODR/M = 00 001
+   = 0000 0001 = 01
+   
+   3. constant
+   00 00 00 04
+   
+   ADD EAX, 0x00000004 = 82 01 00 00 00 04 -> 6 bytes
+   
+   
+
+REFERENSI:
+http://www.c-jump.com/CIS77/CPU/x86/lecture.html
+https://stackoverflow.com/questions/15017659/how-to-read-the-intel-opcode-notation
