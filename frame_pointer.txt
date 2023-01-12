@@ -1,0 +1,24 @@
+* Frame Pointer
+  merujuk pada register EBP / RBP.
+  Pointer ini akan menyimpan base address dari suatu stack frame.
+  Frame pointer memungkinan akses ke local variable maupun
+  function argument via EBP.
+  EBP juga bisa digunakan untuk mengakses caller's frame pada
+  pemanggilan nested function
+  Proses penyimpanan ini melibatkan dua instruksi, yaitu:
+  push ebp
+  mov ebp, esp
+
+  push ebp dilakukan agar esp di-decrement sehingga esp tidak
+  me-overwrite return adrress dari fungsi pemanggil.
+  INGAT!!: return_address == [ebp + 4].
+  sehingga nilai yang disimpan ebp akan dimasukkan ke dalam
+  stack 4 address lebih rendah dibandingkan return_address.
+  Proses ini akan mengakibatkan nilai esp berkurang sebanyak 4.
+  Address yang ditunjuk oleh esp inilah yang akan menjadi
+  frame pointer (base address) dari fungsi yang dipanggil.
+  Sehingga address / base address ini bisa disimpan ke ebp
+  dengan instruksi mov ebp, esp.
+  Dengan demikian sekarang register ebp bisa dipakai untuk
+  mengakses data dari fungsi sebelumnya berupa local variable
+  maupun parameter dari fungsi yang akan dipanggil sekarang.
