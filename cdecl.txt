@@ -1,0 +1,32 @@
+CDECL (C Declaration) Calling Convention
+
+Definition:
+
+; stack allocation
+; for
+; callee function arguments
+
+Prologue
+--------
+push ebp                -> simpan stack frame function caller
+mov ebp, esp            -> set stack frame untuk function callee
+--------
+
+; stack allocation
+; for
+; local variable
+
+--------
+
+mov esp, ebp           -> set pointer esp agar menunjuk kembali ke
+                          function stack frame base address
+pop ebp                -> kembalikan nilai stack frame function
+                          caller
+ret                    -> esp sekarang menunjuk ke address dari
+                          satu instruksi setelah instruksi 'call'
+                          pada function caller.
+                          Maka pop address tersebut ke eip.
+                          Register eip lanjut mengeksekusi
+                          function caller.
+--------
+Epilogue
