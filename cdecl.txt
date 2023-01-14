@@ -17,6 +17,12 @@ mov esp, ebp           -> set pointer esp agar menunjuk kembali ke
                           Proses ini akan mengosongkan (deallocation)
                           semua memori yang digunakan pada stack untuk
                           menyimpan nilai local variable, register dll.
+                          Disini nilai dari ebp memiliki peran penting
+                          agar return address dari fungsi pemanggil
+                          bisa dilacak.
+                          Jika nilai ebp != base address dari stack frame
+                          maka esp akan menunjuk ke alamat lain dan
+                          berpotensi mengakibatkan segmentation fault.
 pop ebp                -> kembalikan nilai stack frame function
                           caller
 ret                    -> esp sekarang menunjuk ke address dari
