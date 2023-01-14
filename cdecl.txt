@@ -13,7 +13,10 @@ mov ebp, esp            -> set stack frame untuk function callee
 --------
 
 mov esp, ebp           -> set pointer esp agar menunjuk kembali ke
-                          function stack frame base address
+                          function stack frame base address.
+                          Proses ini akan mengosongkan (deallocation)
+                          semua memori yang digunakan pada stack untuk
+                          menyimpan nilai local variable, register dll.
 pop ebp                -> kembalikan nilai stack frame function
                           caller
 ret                    -> esp sekarang menunjuk ke address dari
