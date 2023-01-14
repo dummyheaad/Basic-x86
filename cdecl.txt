@@ -1,11 +1,5 @@
 CDECL (C Declaration) Calling Convention
 
-Definition:
-
-; stack allocation
-; for
-; callee function arguments
-
 Prologue
 --------
 push ebp                -> simpan stack frame function caller
